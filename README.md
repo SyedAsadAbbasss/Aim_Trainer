@@ -1,51 +1,49 @@
-# 🎯 Aim Trainer
+# Aim Trainer
 
-A Python + Pygame aim trainer with a MySQL-backed leaderboard. Click targets before they shrink away; three misses ends the run.
+My first project. I built this in 2024 as my diploma minor project.
 
-> Diploma minor project, 2024. My first project.
+I played a lot of FPS games back then and wanted to know how aim trainers actually work, so I made a simple one in Pygame and hooked it up to MySQL to keep a leaderboard.
 
-| Enter name | Select difficulty |
-|---|---|
-| ![Enter name](screenshots/1_enter_name.png) | ![Select difficulty](screenshots/2_select_difficulty.png) |
-| **Gameplay** | **Results & leaderboard** |
-| ![Gameplay](screenshots/3_gameplay.png) | ![Results](screenshots/4_results_leaderboard.png) |
+![Gameplay](screenshots/3_gameplay.png)
 
-## Features
+## How it works
 
-- Three difficulty levels: Easy, Medium, Hard (sets spawn speed and target size)
-- Targets grow, then shrink; if one disappears before you click it, that's a miss
-- Tracks time, hits and accuracy for every run
-- Saves every session to MySQL and shows a Top 5 leaderboard
-- Play Again and Delete Scores buttons on the results screen
+You enter your name, pick a difficulty, and targets start popping up. Each target grows and then shrinks. Click it before it disappears. If you miss 3, the game ends and you get your time, hits and accuracy, along with the top 5 scores saved in the database.
 
-## Tech stack
+Difficulty only changes how fast targets spawn and how big they get:
 
-Python · Pygame · MySQL · mysql-connector-python
+- Easy: every 600 ms, size 40
+- Medium: every 400 ms, size 30
+- Hard: every 250 ms, size 20
 
-## Run it locally
+More screenshots are in the `screenshots/` folder.
 
-1. Install Python 3.9+ and MySQL.
-2. Create the database and table:
-   ```
-   mysql -u root -p < schema.sql
-   ```
-3. Install dependencies:
-   ```
-   pip install -r requirements.txt
-   ```
-4. Set your database credentials:
-   ```
-   # Windows (PowerShell)
-   $env:DB_USER="your_user"; $env:DB_PASSWORD="your_password"
-   # macOS / Linux
-   export DB_USER=your_user DB_PASSWORD=your_password
-   ```
-   Optional: `DB_HOST` (default `localhost`), `DB_NAME` (default `aim_trainer_db`).
-5. Run the game:
-   ```
-   python main.py
-   ```
+## Running it
 
-## Controls
+You need Python and MySQL.
 
-Type your name and press Enter · ↑/↓ and Enter to pick difficulty · click targets · Esc to quit from the results screen
+```
+mysql -u root -p < schema.sql
+pip install -r requirements.txt
+```
+
+Set your DB login as environment variables (I took the hardcoded password out before uploading):
+
+```
+# Windows PowerShell
+$env:DB_USER="your_user"; $env:DB_PASSWORD="your_password"
+
+# Mac / Linux
+export DB_USER=your_user DB_PASSWORD=your_password
+```
+
+Then run `python main.py`.
+
+## Things I'd do differently now
+
+- The whole game is in one file. I'd split the game logic, the screens and the DB code.
+- Play Again calls `main()` again instead of looping, so it technically keeps stacking calls.
+- The leaderboard ranks mostly by accuracy, which isn't a great measure on its own. Something like hits per second would be fairer.
+- There's no in-game display of lives or score while you're playing.
+
+Built with Python, Pygame and MySQL.
